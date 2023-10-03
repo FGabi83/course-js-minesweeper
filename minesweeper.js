@@ -6,5 +6,9 @@ const size = 50;
 let x = 0;
 let y = 0;
 
-ctx.drawImage(image, x, y, size, size);
-ctx.drawImage(image, x + size, y + size, size, size);
+function draw(x, y) {
+  ctx.drawImage(image, x, y, size, size);
+}
+
+draw(x, y);
+draw(x + size, y);
