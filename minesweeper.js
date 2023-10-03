@@ -5,10 +5,12 @@ const ctx = canvas.getContext("2d");
 const size = 50;
 let x = 0;
 let y = 0;
+const columns = canvas.width/size;
 
 function draw(x, y) {
   ctx.drawImage(image, x, y, size, size);
 }
 
-draw(x, y);
-draw(x + size, y);
+for (let i = 0; i < columns; i++) {
+  draw(i * size, 0);
+}
