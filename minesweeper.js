@@ -8,6 +8,16 @@ let y = 0;
 const columns = canvas.width / size;
 const rows = canvas.height / size;
 
+let map = [
+  [1, 0, 0, 0, 0],
+  [0, 0, 1, 0, 1],
+  [1, 0, 0, 1, 0],
+]
+
+console.log(map);
+
+
+
 function draw(x, y) {
   ctx.drawImage(image, x, y, size, size);
 }
