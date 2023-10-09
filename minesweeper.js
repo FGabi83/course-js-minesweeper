@@ -9,13 +9,23 @@ const columns = canvas.width / size;
 const rows = canvas.height / size;
 const mine = "mine";
 
-let map = [
-  [1, mine, 0, 0, 0],
-  [0, 0, 1, 0, 1],
-  [1, 0, 0, 1,mine],
-]
+let map = createMap();
 
 console.log(map);
+
+drawMap();
+
+function createMap() {
+  let map = [];
+  for (let j = 0; j < rows; j++) {
+    let row = [];
+    for (let i = 0; i < columns; i++) {
+      row[i] = 0;
+    }
+    map[j] = row;
+  }
+  return map;
+}
 
 
 
@@ -31,4 +41,3 @@ function drawMap() {
   }
 }
 
-drawMap();
