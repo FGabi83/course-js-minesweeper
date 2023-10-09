@@ -8,12 +8,27 @@ let y = 0;
 const columns = canvas.width / size;
 const rows = canvas.height / size;
 const mine = "mine";
+const mineCount = 5;
 
 let map = createMap();
+placeMines(map, mineCount);
 
 console.log(map);
 
 drawMap();
+
+function placeMines(map, mineCount) {
+  let mines = 0;
+  while(mines < mineCount) {
+    let x = Math.floor(Math.random() * columns);
+    let y = Math.floor(Math.random() * rows);
+    if (map[y][x] !== mine) {
+      map[y][x] = mine;
+      mines++;
+    }
+  }
+}
+
 
 function createMap() {
   let map = [];
