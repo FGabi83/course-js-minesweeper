@@ -7,7 +7,7 @@ let y = 0;
 const columns = canvas.width / size;
 const rows = canvas.height / size;
 const mine = "mine";
-const mineCount = 5;
+const mineCount = 20;
 const images = {
   "hidden" : document.getElementById("hidden"),
   "mine" : document.getElementById("mine"),
@@ -24,7 +24,7 @@ const images = {
 
 let map = createMap();
 placeMines(map, mineCount);
-
+calculateFieldValues(map);
 drawMap();
 
 function calculateFieldValues(map) {
@@ -33,6 +33,8 @@ function calculateFieldValues(map) {
       let field = map[rowI][colI];
       if(field !== mine) {
         let neighborCoordinates = findNeighborField(map, rowI, colI);
+        let mines = countMines(map, neighborCoordinates);
+        map[rowI][colI] = mines;
       }
     } 
   }
@@ -52,7 +54,16 @@ function findNeighborField(map, rowI, colI) {
   return neighborCoordinates;
 }
 
-
+function countMines(map, neighborCoordinates) {
+  let mines = 0;
+  for(let i = 0; i < neighborCoordinates.length; i++) {
+    let neighbor = neighborCoordinates[i];
+    if(map[neighbor.row][neighbor.col] === mine) {
+      mines++;
+    }
+  }
+  return mines;
+}
 
 
 function placeMines(map, mineCount) {
