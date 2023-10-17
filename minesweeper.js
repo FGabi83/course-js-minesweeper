@@ -25,6 +25,7 @@ const images = {
 
 let firstClick = true;
 let isGameOver = false;
+let exploredField = 0;
 
 const buttons = {
   start: "assets/button-start.png",
@@ -52,11 +53,15 @@ canvas.addEventListener("click", function(event) {
   if (map[row][col] === mine) {
     isGameOver = true;
     actionButton.src = buttons.lost;
+  } else if (exploredField === rows * columns - mineCount) {
+    isGameOver = true;
+    actionButton.src = buttons.won;
   }
 });
 
 function exploreField(row, col) {
   if (exploreMap[row][col] === false) {
+    exploredField++;
     exploreMap[row][col] = true;
     if (map[row][col] === 0) {
       let neighborCoordinates = findNeighborField(map, row, col);
