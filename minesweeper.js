@@ -33,9 +33,22 @@ canvas.addEventListener("click", function(event) {
   const y = event.offsetY;
   const row = Math.floor(y / size);
   const col = Math.floor(x / size);
-  exploreMap[row][col] = true;
+  exploreField(row, col);
   drawMap();
 });
+
+function exploreField(row, col) {
+  if (exploreMap[row][col] === false) {
+    exploreMap[row][col] = true;
+    if (map[row][col] === 0) {
+      let neighborCoordinates = findNeighborField(map, row, col);
+      for (let i = 0; i < neighborCoordinates.length; i++) {
+        let neighbor = neighborCoordinates[i];
+        exploreField(neighbor.row, neighbor.col);
+      }
+    }
+  }
+}
 
 function calculateFieldValues(map) {
   for(let rowI = 0; rowI < rows; rowI++) {
