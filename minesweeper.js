@@ -12,6 +12,7 @@ const mineCount = 3;
 const images = {
   "hidden" : document.getElementById("hidden"),
   "mine" : document.getElementById("mine"),
+  "flag" : document.getElementById("flag"),
   "0" : document.getElementById("field-0"),
   "1" : document.getElementById("field-1"),
   "2" : document.getElementById("field-2"),
@@ -33,7 +34,8 @@ let firstClick;
 let isGameOver;
 let exploredField;
 let map;;
-let exploreMap;;
+let exploreMap;
+let flagMap;
 initGame();
 
 canvas.addEventListener("click", function(event) {
@@ -47,6 +49,7 @@ canvas.addEventListener("click", function(event) {
     calculateFieldValues(map);
     firstClick = false;
   }
+  if (flagMap[row][col]) return;
   exploreField(row, col);
   drawMap();
   if (map[row][col] === mine) {
@@ -58,6 +61,19 @@ canvas.addEventListener("click", function(event) {
   }
 });
 
+canvas.addEventListener("contextmenu", function(event) {
+  event.preventDefault(); 
+  if (isGameOver) return;
+  const x = event.offsetX;
+  const y = event.offsetY;
+  const row = Math.floor(y / size);
+  const col = Math.floor(x / size);
+  if (exploreMap[row][col] === false) {
+    flagMap[row][col] = !flagMap[row][col];
+    drawMap();
+  }
+});
+
 actionButton.addEventListener("click", function() {
   initGame();
 });
@@ -65,6 +81,7 @@ actionButton.addEventListener("click", function() {
 function initGame() {
   map = createMap(0);
   exploreMap = createMap(false);
+  flagMap = createMap(false);
   drawMap();
   firstClick = true;
   isGameOver = false;
@@ -159,8 +176,11 @@ function draw(image, x, y) {
 function drawMap() {
   for (let rowI = 0; rowI < rows; rowI++) {
     for (let colI = 0; colI < columns; colI++) {
-      if(exploreMap[rowI][colI] === false) {
+      if(!exploreMap[rowI][colI]) {
         draw(images["hidden"], colI * size, rowI * size);
+        if(flagMap[rowI][colI]) {
+          draw(images["flag"], colI * size, rowI * size);
+        }
       } else {
       let field = map[rowI][colI];
       draw(images[field], colI * size, rowI * size);
