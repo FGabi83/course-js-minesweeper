@@ -22,8 +22,8 @@ const images = {
   "8" : document.getElementById("field-8"),
 };  
 
-let map = createMap();
-let exploreMap = [];
+let map = createMap(0);
+let exploreMap = createMap(false);
 placeMines(map, mineCount);
 calculateFieldValues(map);
 drawMap();
@@ -80,12 +80,12 @@ function placeMines(map, mineCount) {
 }
 
 
-function createMap() {
+function createMap(defaultValue) {
   let map = [];
   for (let j = 0; j < rows; j++) {
     let row = [];
     for (let i = 0; i < columns; i++) {
-      row[i] = 0;
+      row[i] = defaultValue;
     }
     map[j] = row;
   }
@@ -101,8 +101,12 @@ function draw(image, x, y) {
 function drawMap() {
   for (let rowI = 0; rowI < rows; rowI++) {
     for (let colI = 0; colI < columns; colI++) {
+      if(exploreMap[rowI][colI] === false) {
+        draw(images["hidden"], colI * size, rowI * size);
+      } else {
       let field = map[rowI][colI];
       draw(images[field], colI * size, rowI * size);
+      }      
     }
   }
 }
