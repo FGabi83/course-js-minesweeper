@@ -23,6 +23,7 @@ const images = {
 };  
 
 let map = createMap();
+let exploreMap = [];
 placeMines(map, mineCount);
 calculateFieldValues(map);
 drawMap();
