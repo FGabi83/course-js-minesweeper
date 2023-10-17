@@ -23,6 +23,7 @@ const images = {
   "8" : document.getElementById("field-8"),
 }; 
 
+let firstClick = true;
 let isGameOver = false;
 
 const buttons = {
@@ -33,17 +34,19 @@ const buttons = {
 
 let map = createMap(0);
 let exploreMap = createMap(false);
-placeMines(map, mineCount);
-calculateFieldValues(map);
 drawMap();
 
 canvas.addEventListener("click", function(event) {
   if (isGameOver) return;
-  
   const x = event.offsetX;
   const y = event.offsetY;
   const row = Math.floor(y / size);
   const col = Math.floor(x / size);
+  if (firstClick) {
+    placeMines(map, mineCount, row, col);
+    calculateFieldValues(map);
+    firstClick = false;
+  }
   exploreField(row, col);
   drawMap();
   if (map[row][col] === mine) {
@@ -104,12 +107,12 @@ function countMines(map, neighborCoordinates) {
 }
 
 
-function placeMines(map, mineCount) {
+function placeMines(map, mineCount, firstRow, firstCol) {
   let mines = 0;
   while(mines < mineCount) {
     let x = Math.floor(Math.random() * columns);
     let y = Math.floor(Math.random() * rows);
-    if (map[y][x] !== mine) {
+    if (x !== firstCol && y !== firstRow && map[y][x] !== mine) {
       map[y][x] = mine;
       mines++;
     }
