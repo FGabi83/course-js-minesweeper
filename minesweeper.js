@@ -28,6 +28,15 @@ placeMines(map, mineCount);
 calculateFieldValues(map);
 drawMap();
 
+canvas.addEventListener("click", function(event) {
+  const x = event.offsetX;
+  const y = event.offsetY;
+  const row = Math.floor(y / size);
+  const col = Math.floor(x / size);
+  exploreMap[row][col] = true;
+  drawMap();
+});
+
 function calculateFieldValues(map) {
   for(let rowI = 0; rowI < rows; rowI++) {
     for(let colI = 0; colI < columns; colI++) {
