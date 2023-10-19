@@ -12,8 +12,9 @@ const mine = "mine";
 const mineCount = 10;
 const images = {
   "hidden" : document.getElementById("hidden"),
-  "mine" : document.getElementById("mine"),
+  "mine" : document.getElementById("exploded-mine"),
   "flag" : document.getElementById("flag"),
+  "flaggedWrong" : document.getElementById("flagged-wrong"),
   "0" : document.getElementById("field-0"),
   "1" : document.getElementById("field-1"),
   "2" : document.getElementById("field-2"),
@@ -55,8 +56,7 @@ canvas.addEventListener("click", function(event) {
   exploreField(row, col);
   drawMap();
   if (map[row][col] === mine) {
-    isGameOver = true;
-    actionButton.src = buttons.lost;
+    loseGame();
   } else if (exploredField === rows * columns - mineCount) {
     isGameOver = true;
     actionButton.src = buttons.won;
@@ -84,6 +84,8 @@ actionButton.addEventListener("click", function() {
   initGame();
 });
 
+/* GAME INITIALIZATION */
+
 function initGame() {
   map = createMap(0);
   exploreMap = createMap(false);
@@ -96,6 +98,22 @@ function initGame() {
   exploredField = 0;
   actionButton.src = buttons.start;
 }
+
+/* GAME LOST */
+
+function loseGame() {
+  isGameOver = true;
+  actionButton.src = buttons.lost;
+  for (let rowI = 0; rowI < rows; rowI++) {
+    for (let colI = 0; colI < columns; colI++) {
+      if (flagMap[rowI][colI] && map[rowI][colI] !== mine) {
+        map[rowI][colI] = draw(images["flaggedWrong"], colI * size, rowI * size);
+      }
+    }
+  }
+}
+
+/* HELPER FUNCTIONS */
 
 function exploreField(row, col) {
   if (exploreMap[row][col] === false) {
