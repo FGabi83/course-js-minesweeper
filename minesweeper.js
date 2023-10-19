@@ -2,6 +2,7 @@ const canvas = document.getElementById("myCanvas");
 const ctx = canvas.getContext("2d");
 const actionButton = document.getElementById("action-button"); 
 const mineCounter = document.getElementById("mine-count");
+const timeCounter = document.getElementById("time");
 
 const size = 50;
 let x = 0;
@@ -9,7 +10,7 @@ let y = 0;
 const columns = canvas.width / size;
 const rows = canvas.height / size;
 const mine = "mine";
-const mineCount = 10;
+const mineCount = 30;
 const images = {
   "hidden" : document.getElementById("hidden"),
   "mine" : document.getElementById("exploded-mine"),
@@ -39,6 +40,7 @@ let map;;
 let exploreMap;
 let flagMap;
 let remainingMines;
+let timer;
 initGame();
 
 canvas.addEventListener("click", function(event) {
@@ -51,15 +53,18 @@ canvas.addEventListener("click", function(event) {
     placeMines(map, mineCount, row, col);
     calculateFieldValues(map);
     firstClick = false;
+    startTimer();
   }
   if (flagMap[row][col]) return;
   exploreField(row, col);
   drawMap();
   if (map[row][col] === mine) {
     loseGame();
+    stopTimer();
   } else if (exploredField === rows * columns - mineCount) {
     isGameOver = true;
     actionButton.src = buttons.won;
+    stopTimer();
   }
 });
 
@@ -81,6 +86,7 @@ canvas.addEventListener("contextmenu", function(event) {
 });
 
 actionButton.addEventListener("click", function() {
+  stopTimer();
   initGame();
 });
 
@@ -96,6 +102,8 @@ function initGame() {
   firstClick = true;
   isGameOver = false;
   exploredField = 0;
+  let timer = 0;
+  timeCounter.innerText = convertNumberTo3DigitString(timer);
   actionButton.src = buttons.start;
 }
 
@@ -114,6 +122,18 @@ function loseGame() {
 }
 
 /* HELPER FUNCTIONS */
+
+function startTimer() {
+  let seconds = 0;
+  timer = setInterval(function() {
+    seconds = Math.min(seconds + 1, 999);
+    timeCounter.innerText = convertNumberTo3DigitString(seconds);
+  }, 1000);
+}
+
+function stopTimer() {
+  clearInterval(timer);
+}
 
 function exploreField(row, col) {
   if (exploreMap[row][col] === false) {
