@@ -1,6 +1,7 @@
 const canvas = document.getElementById("myCanvas");
 const ctx = canvas.getContext("2d");
 const actionButton = document.getElementById("action-button"); 
+const mineCounter = document.getElementById("mine-count");
 
 const size = 50;
 let x = 0;
@@ -8,7 +9,7 @@ let y = 0;
 const columns = canvas.width / size;
 const rows = canvas.height / size;
 const mine = "mine";
-const mineCount = 3;
+const mineCount = 10;
 const images = {
   "hidden" : document.getElementById("hidden"),
   "mine" : document.getElementById("mine"),
@@ -36,6 +37,7 @@ let exploredField;
 let map;;
 let exploreMap;
 let flagMap;
+let remainingMines;
 initGame();
 
 canvas.addEventListener("click", function(event) {
@@ -61,6 +63,8 @@ canvas.addEventListener("click", function(event) {
   }
 });
 
+/* ADD OR REMOVE FLAG */
+
 canvas.addEventListener("contextmenu", function(event) {
   event.preventDefault(); 
   if (isGameOver) return;
@@ -70,7 +74,9 @@ canvas.addEventListener("contextmenu", function(event) {
   const col = Math.floor(x / size);
   if (exploreMap[row][col] === false) {
     flagMap[row][col] = !flagMap[row][col];
+    remainingMines += flagMap[row][col] ? -1 : 1;
     drawMap();
+    mineCounter.innerText = convertNumberTo3DigitString(remainingMines);
   }
 });
 
@@ -83,6 +89,8 @@ function initGame() {
   exploreMap = createMap(false);
   flagMap = createMap(false);
   drawMap();
+  remainingMines = mineCount;
+  mineCounter.innerText = convertNumberTo3DigitString(remainingMines);
   firstClick = true;
   isGameOver = false;
   exploredField = 0;
@@ -189,3 +197,14 @@ function drawMap() {
   }
 }
 
+function convertNumberTo3DigitString(number) {
+  if (number < 0) {
+    return "🤡";
+  } else if (number < 10) {
+    return "00" + number;
+  } else if (number < 100) {
+    return "0" + number;
+  } else {
+    return number;
+  }
+}
